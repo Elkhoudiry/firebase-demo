@@ -1,16 +1,14 @@
-import 'package:firebase_demo/screens/authentication/register.dart';
 import 'package:firebase_demo/services/auth_service.dart';
 import 'package:firebase_demo/utils/widgets/custom_input_decoration.dart';
 import 'package:firebase_demo/utils/widgets/custom_parent_container.dart';
-import 'package:firebase_demo/utils/widgets/custom_on_button_loading.dart';
 import 'package:flutter/material.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   AuthService _auth = AuthService();
 
   var _formKey = GlobalKey<FormState>();
@@ -28,14 +26,13 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text('Sign in'),
+        title: Text('Register'),
         actions: [
           FlatButton.icon(
               icon: Icon(Icons.person),
-              label: Text('Register'),
+              label: Text('Login'),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Register()));
+                Navigator.pop(context);
               })
         ],
       ),
@@ -63,17 +60,14 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 20.0),
               RaisedButton(
                   color: Colors.pink[400],
-                  child: loading
-                      ? CustomOnButtonLoading()
-                      : Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                  child: Text(
+                    'Register',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       setState(() => loading = true);
-
-                      var result = await _auth.signInWithEmailAndPassword(
+                      var result = await _auth.registerWithEmailAndPassword(
                           email, password);
 
                       if (result == null) {
@@ -83,6 +77,7 @@ class _SignInState extends State<SignIn> {
                         });
                         return;
                       }
+                      Navigator.pop(context);
                     }
                   }),
               SizedBox(height: 20.0),
@@ -92,23 +87,5 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
-  }
-}
-
-class UserModel {
-  var name = "";
-  var age = 0;
-  var color = "";
-  var city = "";
-
-  static UserModel create(Map map) {
-    var model = UserModel();
-
-    model.name = map['name'];
-    model.age = map['age'];
-    model.color = map['color'];
-    model.city = map['city'];
-
-    return model;
   }
 }
